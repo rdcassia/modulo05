@@ -3,8 +3,27 @@ import React, { Component } from 'react';
 import { FaGitAlt, FaPlus } from 'react-icons/fa';
 import { Container, Form, SubmitButton } from './styles';
 
+import api from '../../services/api';
+
 export default class Main extends Component {
+  state = {
+    newRepo: '',
+  };
+
+  handleInputChange = e => {
+    this.setState({ newRepo: e.target.value });
+  };
+
+  handleSubmit = async e => {
+    e.preventDefault();
+    const newRepo = this.state;
+    const response = await api.get(`/repos/${newRepo}`);
+    console.log(response.data);
+  };
+
   render() {
+    const { newRepo } = this.state;
+
     return (
       <Container>
         <h1>
@@ -12,8 +31,13 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={() => {}}>
-          <input type="text" placeholder="adcionar repositório" />
+        <Form onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder="adcionar repositório"
+            value={newRepo}
+            onChange={this.handleInputChange}
+          />
 
           <SubmitButton disable>
             <FaPlus color="FFF" size={14} />
